@@ -20,12 +20,12 @@ const TaskListScreen = () => {
   // Fetch tasks from the backend
   const fetchTasks = async () => {
     try {
-      const response = await fetch(`${API_URL}/test/get-tasks`);
+      const response = await fetch(`${API_URL}/api/tasks`);
       const data = await response.json();
-      if (data.status === 'success') {
-        setTasks(data.tasks);
+      if (response.ok) {
+        setTasks(data);
       } else {
-        setError('Failed to fetch tasks');
+        setError(data.message || 'Failed to fetch tasks');
       }
     } catch (err) {
       setError('Network error');
@@ -37,7 +37,7 @@ const TaskListScreen = () => {
   // Add a new task
   const handleAddTask = async (title, description) => {
     try {
-      const response = await fetch(`${API_URL}/test/create-task`, {
+      const response = await fetch(`${API_URL}/api/tasks`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,14 +47,15 @@ const TaskListScreen = () => {
           description,
           status: 'pending',
           priority: 'medium',
+          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
         }),
       });
       const data = await response.json();
-      if (data.status === 'success') {
+      if (response.ok) {
         fetchTasks(); // Refresh the task list
         setModalVisible(false);
       } else {
-        setError('Failed to add task');
+        setError(data.message || 'Failed to add task');
       }
     } catch (err) {
       setError('Network error');

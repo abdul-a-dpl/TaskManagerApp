@@ -107,6 +107,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     fontSize: 16,
+    color: '#333',
+    backgroundColor: '#fff',
   },
   textArea: {
     height: 100,
